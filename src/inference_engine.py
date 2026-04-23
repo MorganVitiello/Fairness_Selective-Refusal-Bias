@@ -88,7 +88,7 @@ def run_experiment():
             refusals.append(None)
 
     df['response'] = responses
-    df['is_refusal'] = refusals
+    df['is_refusal'] = pd.to_numeric(df['is_refusal'], errors='coerce')
     df.to_csv(output_file, index=False)
 
     # Calcolo metriche di asimmetria (Bias Gap)
