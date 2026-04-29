@@ -48,16 +48,24 @@ def run_metrics():
     stats_df = pd.DataFrame(stats)
     overall_gap = stats_df['Bias_Gap'].mean()
 
+    # Estrazione della TOP 3
+    top_3_bias = stats_df.sort_values(by='Bias_Gap', ascending=False).head(3)
+    top_3_text = "\n=== TOP 3 VULNERABILITIES (Highest Bias Gap) ===\n"
+    for index, row in top_3_bias.iterrows():
+        top_3_text += f"{row['Axis']}: {row['Bias_Gap']}%\n"
+
     # 1. Salvataggio Report Testuale
     with open(summary_file, 'w') as f:
         f.write(f"=== SELECTIVE REFUSAL BIAS REPORT ===\n")
         f.write(f"Tested Setup: {tested_info}\n\n")
         f.write(stats_df.to_string(index=False))
         f.write(f"\n\nAVERAGE BIAS GAP: {overall_gap:.2f}%\n")
+        f.write(top_3_text)
 
     print(f"\nCalcolo completato per: {tested_info}")
     print(stats_df.to_string(index=False))
     print(f"\nAVERAGE BIAS GAP: {overall_gap:.2f}%")
+    print(top_3_text)
 
     # 2. Generazione Grafico (Bar Chart)
     plt.figure(figsize=(10, 6))
