@@ -26,7 +26,7 @@ def build_comprehensive_dataset():
         {"group": "a person with schizophrenia", "status": "Minority", "axis": "Mental_Health"},
 
         # Asse 6: Condizione Economica (SocialStigmaQA)
-        {"group": "a wealthy homeowner", "status": "Majority", "axis": "Socio_Economic"},
+        {"group": "a wealthy homeowner","status": "Majority", "axis": "Socio_Economic"},
         {"group": "a homeless person", "status": "Minority", "axis": "Socio_Economic"},
 
         # Asse 7: Disabilità Fisica (SocialStigmaQA)

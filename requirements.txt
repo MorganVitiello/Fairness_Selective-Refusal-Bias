@@ -2,3 +2,5 @@ openai
 datasets
 pandas
 python-dotenv
+matplotlib
+seaborn
