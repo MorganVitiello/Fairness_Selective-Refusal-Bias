@@ -7,25 +7,36 @@ import seaborn as sns
 
 def run_metrics():
     parser = argparse.ArgumentParser(description="Calculate Bias Gap metrics and generate charts.")
-    parser.add_argument("--input_csv", type=str, required=True, help="Percorso al file risultati_bias_raw.csv")
+    parser.add_argument("--input_csv", type=str, required=True, help="Percorso al file evaluated_generations.csv")
     args = parser.parse_args()
 
     if not os.path.exists(args.input_csv):
         print(f"Errore: File non trovato {args.input_csv}")
         return
 
+    # ==========================================
+    # GESTIONE NOMI E PERCORSI (AUTOMATICA)
+    # ==========================================
     result_dir = os.path.dirname(args.input_csv)
-    folder_name = os.path.basename(result_dir)
-    tested_info = folder_name.replace("bias_", "") if folder_name.startswith("bias_") else folder_name
+    model_name = os.path.basename(result_dir)  # Es. gemma-4-e4b-it
+    technique_name = os.path.basename(os.path.dirname(result_dir))  # Es. persona, cot, baseline
 
-    base_filename = os.path.splitext(os.path.basename(args.input_csv))[0]
+    # Creiamo un'etichetta pulita per i titoli
+    tested_info = f"{model_name.upper()} (Technique: {technique_name.upper()})"
 
-    summary_file = os.path.join(result_dir, f"summary_{base_filename}.txt")
-    chart_file = os.path.join(result_dir, f"chart_{base_filename}.png")
+    summary_file = os.path.join(result_dir, f"summary_report.txt")
+    chart_file = os.path.join(result_dir, f"chart_refusal_rates.png")
 
     df = pd.read_csv(args.input_csv)
 
-    df['is_refusal'] = pd.to_numeric(df['is_refusal'], errors='coerce')
+    # ==========================================
+    # PULIZIA DATI (DATA CLEANING)
+    # ==========================================
+    # Rimuoviamo eventuali righe andate in errore durante la valutazione
+    df = df[df['is_refusal'].astype(str).str.upper() != 'ERROR']
+
+    # Convertiamo rigorosamente in Booleani True/False (1/0)
+    df['is_refusal'] = df['is_refusal'].astype(str).str.strip().str.upper() == 'TRUE'
 
     stats = []
     for axis in df['axis'].unique():
@@ -68,7 +79,7 @@ def run_metrics():
     print(top_3_text)
 
     # 2. Generazione Grafico (Bar Chart)
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 6))
     sns.set_theme(style="whitegrid")
 
     # Prepariamo i dati per il grafico (formato lungo)
@@ -82,7 +93,9 @@ def run_metrics():
     })
 
     ax = sns.barplot(data=melted_df, x='Axis', y='Refusal Rate (%)', hue='Group Status', palette=['#3498db', '#e74c3c'])
-    plt.title(f'Selective Refusal Rates by Axis\n({tested_info})', fontsize=14, pad=15)
+
+    # Titolo aggiornato automaticamente
+    plt.title(f'Selective Refusal Rates by Axis\n{tested_info}', fontsize=14, pad=15)
     plt.ylabel('Refusal Rate (%)', fontsize=12)
     plt.xlabel('Demographic Axis', fontsize=12)
     plt.xticks(rotation=45, ha='right')

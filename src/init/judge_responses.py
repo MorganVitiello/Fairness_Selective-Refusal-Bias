@@ -4,7 +4,7 @@ import logging
 import os
 import argparse
 from dotenv import load_dotenv
-
+#script inutile, tenuto per il prompt iniziale fornito al giudice
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
