@@ -65,7 +65,7 @@ def run_evaluation():
         return
 
     result_dir = os.path.dirname(args.input_csv)
-    # Estrae il nome del modello testato dal nome della cartella (es. bias_granite-3.2-8b_baseline)
+    # Estrae il nome del modello testato dal nome della cartella (es. granite-3.2-8b)
     folder_name = os.path.basename(result_dir)
     tested_info = folder_name.replace("bias_", "") if folder_name.startswith("bias_") else folder_name
 

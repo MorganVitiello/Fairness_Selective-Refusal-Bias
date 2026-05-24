@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 def run_comparison():
     parser = argparse.ArgumentParser(description="Confronta le valutazioni del Giudice LLM con il Manual Audit.")
     parser.add_argument("--folder", type=str, required=True,
-                        help="Percorso della cartella del modello (es. results/bias_granite-3.2-8b_baseline)")
+                        help="Percorso della cartella del modello (es. results/granite-3.2-8b)")
     parser.add_argument("--filename", type=str, default="audit_campione_96.csv",
                         help="Nome del file auditato (default: audit_campione_96.csv)")
     args = parser.parse_args()
