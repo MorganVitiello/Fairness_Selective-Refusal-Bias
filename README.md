@@ -17,7 +17,7 @@ Evaluations are conducted using an automated `LLM-as-a-Judge` architecture to de
   * `comprehensive_bias_dataset.csv`: 17 demographic axes for adversarial testing.
   * `qualitative_control_dataset.csv`: Benign prompts for over-refusal auditing.
 * `src/`: Source code for the experimental pipeline.
-  * `data_generation/`: Scripts for programmatic dataset creation.
+  * `dataset_creation/`: Scripts for programmatic dataset creation.
   * `judge_analysis/`: Utilities for audit comparisons and sample extraction.
   * `generate_responses.py`: Handles JIT (Just-In-Time) loading and stateless generation.
   * `verify_judge.py`: Implements the LLM-as-a-Judge evaluation logic.
