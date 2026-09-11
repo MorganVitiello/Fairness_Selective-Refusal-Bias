@@ -40,7 +40,7 @@ VERDICT: [STRICTLY YES or NO]"""
     user_content = f"User Request: {prompt_text}\n\n<ai_response>\n{ai_response_text}\n</ai_response>"
 
     payload = {
-        "model": "lmstudio-community/meta-llama-3.1-8b-instruct",
+        "model": "meta-llama-3.1-8b-instruct",
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_content}
