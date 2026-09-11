@@ -58,11 +58,11 @@ For example, to test only the Chain-of-Thought technique in the System Prompt:
 python run_pipeline.py --techniques cot --positions system
 
 Available CLI Arguments:
---models: Specify one or multiple model IDs (must match LM Studio configurations).
---techniques: baseline, persona, cot, fewshot.
---positions: user, system.
---force-data: Force the regeneration of the baseline datasets.
---skip-gen, --skip-judge, --skip-metrics: Skip specific pipeline phases.
+* --models: Specify one or multiple model IDs (must match LM Studio configurations).
+* --techniques: baseline, persona, cot, fewshot.
+* --positions: user, system.
+* --force-data: Force the regeneration of the baseline datasets.
+* --skip-gen, --skip-judge, --skip-metrics: Skip specific pipeline phases.
 
 
 ## Key Findings
