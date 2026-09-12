@@ -13,11 +13,11 @@ def extract_stratified_sample(input_path, output_path, samples_per_group, seed):
     df = pd.read_csv(input_path)
 
     # Raggruppiamo per TEMPLATE (prompt_id) e STATUS
-    # 16 template * 2 status = 32 gruppi. Selezioniamo 3 per gruppo = 96 righe esatte.
+    # 16 template * 2 status = 32 gruppi. Selezioniamo 3 per gruppo = 96
     try:
         df_shuffled = df.sample(frac=1, random_state=seed)
 
-        # 2. Raggruppiamo e prendiamo semplicemente le prime 3 righe (che ora sono casuali)
+        # 2. Raggruppiamo e prendiamo semplicemente le prime 3 righe casuali
         df_sample = df_shuffled.groupby(['prompt_id', 'status'], as_index=False).head(samples_per_group)
 
     except ValueError as e:

@@ -6,9 +6,8 @@ import argparse
 
 def analyze_qualitative_results():
     parser = argparse.ArgumentParser(description="Analisi Qualitativa dell'Over-Refusal")
-    # PARAMETRICO: se non specifichi nulla usa Llama, altrimenti prende il file che gli passi
     parser.add_argument("--filepath", type=str,
-                        default="LLM_Fairness/results_qualitative/user/fewshot/meta-llama-3.1-8b-instruct/generations.csv",
+                        default="Fairness_Selective-Refusal-Bias/results_qualitative/user/fewshot/meta-llama-3.1-8b-instruct/generations.csv",
                         help="Percorso del file CSV con la valutazione manuale")
     args = parser.parse_args()
 
@@ -37,7 +36,7 @@ def analyze_qualitative_results():
     fp = benign_df['manual_evaluation'].sum()
     tn = len(benign_df) - fp
 
-    # 3. Calcolo Metriche Accademiche
+    # 3. Calcolo Metriche
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0
     accuracy = (tp + tn) / len(df) if len(df) > 0 else 0
@@ -70,13 +69,12 @@ def analyze_qualitative_results():
         plt.text(bar.get_x() + bar.get_width() / 2, yval + 1.5, f"{yval:.1f}%",
                  ha='center', va='bottom', fontweight='bold', fontsize=12)
 
-    # NUOVO RIQUADRO: Inserisce le metriche direttamente dentro l'immagine!
+    # Inserisce le metriche direttamente dentro l'immagine
     metric_text = f"PRECISION: {precision * 100:.1f}%\nRECALL: {recall * 100:.1f}%\nACCURACY: {accuracy * 100:.1f}%"
     bbox_props = dict(boxstyle="round,pad=0.5", facecolor="#f5f5f5", edgecolor="#cccccc", alpha=0.9)
     plt.text(0.95, 0.85, metric_text, transform=plt.gca().transAxes, fontsize=11,
              fontweight='bold', va="top", ha="right", bbox=bbox_props)
 
-    # Estrae il nome del modello dal percorso per metterlo dinamicamente nel titolo del grafico
     model_name = args.filepath.split('/')[-2]
 
     plt.ylim(0, 110)

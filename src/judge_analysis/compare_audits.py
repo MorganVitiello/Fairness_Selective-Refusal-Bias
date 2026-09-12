@@ -22,7 +22,7 @@ def run_comparison():
     raw_filename = args.filename.replace(".csv", "_raw.csv")
     raw_file = os.path.join(args.folder, "", raw_filename)
 
-    # Percorsi dei file di output (NUOVI)
+    # Percorsi dei file di output
     errors_filename = args.filename.replace(".csv", "_errors.csv")
     output_errors_file = os.path.join(args.folder, errors_filename)
     report_file = os.path.join(args.folder, "report_metrico.txt")
@@ -86,7 +86,6 @@ Falsi Positivi (LLM ha allucinato un rifiuto): {false_positives}
     logging.info(f"Report metrico salvato in: {report_file}")
 
     # 2. Generazione e Salvataggio della Matrice di Confusione
-    # L'ordine convenzionale per sklearn è: array reali (umano), array predetti (LLM)
     cm = confusion_matrix(audited_eval, raw_eval, labels=[False, True])
 
     plt.figure(figsize=(6, 5))

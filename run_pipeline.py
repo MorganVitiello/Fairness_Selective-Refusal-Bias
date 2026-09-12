@@ -3,9 +3,7 @@ import subprocess
 import time
 import argparse
 
-# ==========================================
-# CONFIGURAZIONE PIPELINE GLOBALE & PATH
-# ==========================================
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SRC_DIR = os.path.join(BASE_DIR, "src")
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -20,7 +18,6 @@ DEFAULT_MODELS = [
 ]
 JUDGE_MODEL = "meta-llama-3.1-8b-instruct"
 
-# Nome del file di output atteso per il dataset principale
 MAIN_DATASET_FILE = os.path.join(DATA_DIR, "comprehensive_bias_dataset.csv")
 QUAL_DATASET_FILE = os.path.join(DATA_DIR, "qualitative_control_dataset.csv")
 
@@ -36,7 +33,7 @@ def run_cmd(cmd):
 
 
 def main():
-    # --- SETUP ARGOMENTI DA TERMINALE ---
+    # SETUP ARGOMENTI DA TERMINALE
     parser = argparse.ArgumentParser(description="Pipeline End-to-End per LLM Fairness Audit")
     parser.add_argument("--models", nargs="+", default=DEFAULT_MODELS, help="Lista dei modelli da testare")
     parser.add_argument("--techniques", nargs="+", default=["persona", "cot", "fewshot"], help="Tecniche da testare")

@@ -3,7 +3,7 @@ import requests
 import argparse
 import os
 
-# --- CONFIGURAZIONE SERVER LOCALE ---
+# CONFIGURAZIONE SERVER LOCALE
 LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
 
 

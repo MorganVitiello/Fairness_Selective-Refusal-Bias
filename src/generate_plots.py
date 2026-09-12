@@ -5,11 +5,11 @@ import argparse
 import os
 
 COLOR_MAPS = {
-    "BASELINE": "coolwarm",  # Blu (buono) -> Rosso (cattivo)
-    "PERSONA": "PRGn",  # Viola -> Verde
-    "COT": "BrBG",  # Marrone -> Verde acqua
-    "FEWSHOT": "PuOr",  # Viola -> Arancione
-    "CROSS_TECHNIQUE": "RdYlBu_r"  # Blu scuro -> Giallo -> Rosso scuro (per il confronto tra tecniche)
+    "BASELINE": "coolwarm",
+    "PERSONA": "PRGn",
+    "COT": "BrBG",
+    "FEWSHOT": "PuOr",
+    "CROSS_TECHNIQUE": "RdYlBu_r"
 }
 
 
@@ -42,7 +42,7 @@ def calculate_bias_gaps(folder_path):
         print(f"Colonne mancanti in {file_path}.")
         return None
 
-    # Pulizia: Rimuovi gli ERROR e converti in booleano
+    # Pulizia: Rimuove gli ERROR e converte in booleano
     df = df[df['is_refusal'].astype(str).str.upper() != 'ERROR']
     df['is_refusal'] = df['is_refusal'].astype(str).str.strip().str.upper() == 'TRUE'
 
@@ -63,7 +63,6 @@ def calculate_bias_gaps(folder_path):
 def generate_comparative_plots(folders, output_dir, compare_type):
     print(f"\nInizio generazione grafici (Modalità: Confronto tra {compare_type.upper()})...")
 
-    # Sottocartella per tenere in ordine i plot
     specific_output_dir = os.path.join(output_dir, f"compare_{compare_type}")
     os.makedirs(specific_output_dir, exist_ok=True)
 
@@ -77,9 +76,8 @@ def generate_comparative_plots(folders, output_dir, compare_type):
 
         if gaps is not None:
             all_gaps[col_label] = gaps
-            shared_title_label = title_label  # Salva il contesto condiviso (es. il Modello o la Tecnica)
+            shared_title_label = title_label  # Salva il contesto condiviso (il Modello o la Tecnica)
 
-            # Se confrontiamo modelli, usa il colore della tecnica specifica
             if compare_type == 'models' and title_label in COLOR_MAPS:
                 cmap_to_use = COLOR_MAPS[title_label]
 
@@ -99,9 +97,8 @@ def generate_comparative_plots(folders, output_dir, compare_type):
         x_label = "Applied Prompting Strategies"
         file_suffix = f"techniques_on_{shared_title_label.lower()}"
 
-    # ==========================================
+
     # 1. GRAFICO: HEATMAP COMPARATIVA
-    # ==========================================
     plt.figure(figsize=(12, 8))
     sns.heatmap(df_heatmap, annot=True, fmt=".1f", cmap=cmap_to_use, center=0,
                 linewidths=0.5, cbar_kws={'label': 'Bias Gap % (Minority Refusal - Majority Refusal)'})
@@ -117,9 +114,8 @@ def generate_comparative_plots(folders, output_dir, compare_type):
     plt.close()
     print(f"Heatmap salvata in: {heatmap_path}")
 
-    # ==========================================
+
     # 2. GRAFICO: AVERAGE BIAS GAP (BAR CHART)
-    # ==========================================
     plt.figure(figsize=(8, 6))
     avg_gaps = df_heatmap.mean().sort_values(ascending=False)
 

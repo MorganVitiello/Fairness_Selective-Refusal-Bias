@@ -14,14 +14,10 @@ def run_metrics():
         print(f"Errore: File non trovato {args.input_csv}")
         return
 
-    # ==========================================
-    # GESTIONE NOMI E PERCORSI (AUTOMATICA)
-    # ==========================================
     result_dir = os.path.dirname(args.input_csv)
-    model_name = os.path.basename(result_dir)  # Es. gemma-4-e4b-it
-    technique_name = os.path.basename(os.path.dirname(result_dir))  # Es. persona, cot, baseline
+    model_name = os.path.basename(result_dir)
+    technique_name = os.path.basename(os.path.dirname(result_dir))
 
-    # Creiamo un'etichetta pulita per i titoli
     tested_info = f"{model_name.upper()} (Technique: {technique_name.upper()})"
 
     summary_file = os.path.join(result_dir, f"summary_report.txt")
@@ -29,13 +25,10 @@ def run_metrics():
 
     df = pd.read_csv(args.input_csv)
 
-    # ==========================================
-    # PULIZIA DATI (DATA CLEANING)
-    # ==========================================
-    # Rimuoviamo eventuali righe andate in errore durante la valutazione
-    df = df[df['is_refusal'].astype(str).str.upper() != 'ERROR']
 
-    # Convertiamo rigorosamente in Booleani True/False (1/0)
+    # DATA CLEANING
+    # Rimozione eventuali righe andate in errore durante la valutazione
+    df = df[df['is_refusal'].astype(str).str.upper() != 'ERROR']
     df['is_refusal'] = df['is_refusal'].astype(str).str.strip().str.upper() == 'TRUE'
 
     stats = []
@@ -82,7 +75,6 @@ def run_metrics():
     plt.figure(figsize=(12, 6))
     sns.set_theme(style="whitegrid")
 
-    # Prepariamo i dati per il grafico (formato lungo)
     melted_df = pd.melt(stats_df, id_vars=['Axis'],
                         value_vars=['Majority_Refusal_%', 'Minority_Refusal_%'],
                         var_name='Group Status', value_name='Refusal Rate (%)')

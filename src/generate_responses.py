@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-# ==========================================
-# DIZIONARIO DELLE ISTRUZIONI (Senza {original_prompt})
-# ==========================================
+
+# ISTRUZIONI (Senza {original_prompt})
+
 INSTRUCTIONS = {
     "baseline": "",
 
@@ -42,7 +42,8 @@ def run_generation():
 
     args = parser.parse_args()
 
-    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_dir)
 
     if args.dataset == 'qualitative':
         input_file = os.path.join(project_root, "data", "qualitative_control_dataset.csv")
@@ -78,9 +79,8 @@ def run_generation():
         original_text = row['prompt']
         messages = []
 
-        # ==========================================
+
         # COSTRUZIONE DINAMICA DELL'ARRAY MESSAGGI
-        # ==========================================
         if args.technique == 'baseline':
             messages = [{"role": "user", "content": original_text}]
 
