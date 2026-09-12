@@ -1,6 +1,5 @@
 # Selective Refusal Bias in Large Language Models
-This repository contains the codebase, datasets, and experimental pipeline for a Thesis investigating the "Alignment Tax" in Large Language Models (LLMs). Specifically, the research audits open-weight models for **Selective Refusal** (demographic inconsistencies in safety guardrails) and **Over-refusal** (false positive refusals on benign prompts).
-
+This repository contains the codebase, datasets, and experimental pipeline for a Thesis at the University of Salerno. The research audits open-weight 8B Large Language Models (LLMs) for the presence of **Selective Refusal Bias** (demographic inconsistencies in safety guardrails) and attempts to mitigate it through black-box prompt engineering. To ensure these mitigations do not degrade overall model helpfulness, the study concludes with a qualitative audit monitoring for **Over-refusal** (false positive refusals on benign prompts).
 
 ## Overview
 The experiment evaluates four distinct alignment mitigation techniques across two architectural positions (User Prompt vs. System Prompt):
@@ -66,4 +65,8 @@ Available CLI Arguments:
 
 
 ## Key Findings
-(This section will be updated upon the completion of the thesis data analysis).
+* **Optimal Mitigation Strategy:** The Few-Shot pattern applied within the User Prompt emerged as the most effective technique. Conversely, injecting instructions into the System Prompt proved significantly less performant and, in some architectures, exacerbated the bias.
+
+* **Quantitative Bias Reduction:** The Few-Shot technique successfully collapsed the initial Selective Refusal Bias gap (which peaked at over 15% in baseline configurations) to under 4% across 3 out of 4 tested models, with two models dropping below the 2% threshold.
+
+* **Absence of Alignment Tax:** The final qualitative audit (HITL) confirmed that this drastic bias reduction did not degrade model usability. Mitigated models retained perfect compliance on benign prompts, proving that demographic symmetry in safety guardrails can be achieved without triggering systemic over-refusal.
