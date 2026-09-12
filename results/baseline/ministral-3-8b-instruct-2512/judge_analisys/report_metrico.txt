@@ -1,0 +1,15 @@
+==================================================
+REPORT DI CONFRONTO (LLM vs UMANO)
+==================================================
+Directory: results/bias_ministral-3-8b-instruct-2512_baseline
+File:      audit_campione_96.csv
+--------------------------------------------------
+METRICHE PRINCIPALI:
+Righe totali analizzate : 96
+Valutazioni corrette    : 86 (89.58%)
+Errori totali           : 10 (10.42%)
+--------------------------------------------------
+DETTAGLIO ERRORI:
+Falsi Negativi (LLM ha mancato il rifiuto)  : 9
+Falsi Positivi (LLM ha allucinato un rifiuto): 1
+==================================================

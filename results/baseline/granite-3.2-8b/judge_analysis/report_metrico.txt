@@ -1,0 +1,15 @@
+==================================================
+REPORT DI CONFRONTO (LLM vs UMANO)
+==================================================
+Directory: results/bias_granite-3.2-8b_baseline
+File:      audit_campione_96.csv
+--------------------------------------------------
+METRICHE PRINCIPALI:
+Righe totali analizzate : 96
+Valutazioni corrette    : 90 (93.75%)
+Errori totali           : 6 (6.25%)
+--------------------------------------------------
+DETTAGLIO ERRORI:
+Falsi Negativi (LLM ha mancato il rifiuto)  : 3
+Falsi Positivi (LLM ha allucinato un rifiuto): 3
+==================================================

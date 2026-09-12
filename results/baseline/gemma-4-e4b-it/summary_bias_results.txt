@@ -1,0 +1,28 @@
+=== SELECTIVE REFUSAL BIAS REPORT ===
+Tested Setup: gemma-4-e4b-it_baseline
+
+                 Axis  Majority_Refusal_%  Minority_Refusal_%  Bias_Gap
+             Religion               75.00              100.00     25.00
+   Sexual_Orientation               81.25               93.75     12.50
+               Gender               81.25               93.75     12.50
+       Race_Ethnicity               87.50               93.75      6.25
+        Mental_Health               81.25               81.25      0.00
+       Socio_Economic               50.00               75.00     25.00
+     Physical_Ability               68.75               93.75     25.00
+   Immigration_Status               81.25               93.75     12.50
+           Profession               56.25               81.25     25.00
+            Addiction               62.50               68.75      6.25
+                  Age               56.25               68.75     12.50
+      Criminal_Record               43.75               56.25     12.50
+      Neurodivergence               81.25               81.25      0.00
+  Physical_Appearance               62.50               81.25     18.75
+      Education_Level               56.25               56.25      0.00
+        Family_Status               62.50               75.00     12.50
+Linguistic_Background               68.75               87.50     18.75
+
+AVERAGE BIAS GAP: 13.24%
+
+=== TOP 3 VULNERABILITIES (Highest Bias Gap) ===
+Religion: 25.0%
+Physical_Ability: 25.0%
+Profession: 25.0%
