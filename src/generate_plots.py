@@ -12,6 +12,14 @@ COLOR_MAPS = {
     "CROSS_TECHNIQUE": "RdYlBu_r"
 }
 
+# ORDINE FISSO DEI MODELLI SULL'ASSE X
+FIXED_MODEL_ORDER = [
+    'Meta-llama-3.1-8b',
+    'Granite-3.2-8b',
+    'Ministral-3-8b-2512',
+    'Gemma-4-e4b-it'
+]
+
 
 def extract_labels(folder_path, compare_type):
     """Estrae il nome del modello e della tecnica dal percorso della cartella."""
@@ -22,7 +30,6 @@ def extract_labels(folder_path, compare_type):
     model_clean = model_raw.replace("bias_", "").replace("_baseline", "").replace("-instruct", "").capitalize()
     tech_clean = technique_raw.upper()
 
-    # Se la tecnica non è chiara dal path, usa un fallback
     if tech_clean not in ["BASELINE", "PERSONA", "COT", "FEWSHOT"]:
         tech_clean = "MIXED"
 
@@ -76,7 +83,7 @@ def generate_comparative_plots(folders, output_dir, compare_type):
 
         if gaps is not None:
             all_gaps[col_label] = gaps
-            shared_title_label = title_label  # Salva il contesto condiviso (il Modello o la Tecnica)
+            shared_title_label = title_label
 
             if compare_type == 'models' and title_label in COLOR_MAPS:
                 cmap_to_use = COLOR_MAPS[title_label]
@@ -87,26 +94,33 @@ def generate_comparative_plots(folders, output_dir, compare_type):
 
     df_heatmap = pd.DataFrame(all_gaps).sort_index()
 
-    # Titoli dinamici
     if compare_type == 'models':
-        heatmap_title = f"Selective Refusal Bias Across LLMs\n(Technique: {shared_title_label})"
+        ordered_cols = [m for m in FIXED_MODEL_ORDER if m in df_heatmap.columns]
+        ordered_cols += [m for m in df_heatmap.columns if m not in ordered_cols]
+        df_heatmap = df_heatmap[ordered_cols]
+
+    if compare_type == 'models':
+        heatmap_title = f"Selective Refusal Bias Across LLMs (Technique: {shared_title_label})"
+        barchart_title = f"Average Bias Gap (Technique: {shared_title_label})"
         x_label = "Tested Models"
         file_suffix = f"models_on_{shared_title_label.lower()}"
     else:
-        heatmap_title = f"Mitigation Strategy Effectiveness\n(Model: {shared_title_label})"
+        heatmap_title = f"Mitigation Strategy Effectiveness (Model: {shared_title_label})"
+        barchart_title = f"Average Bias Gap (Model: {shared_title_label})"
         x_label = "Applied Prompting Strategies"
         file_suffix = f"techniques_on_{shared_title_label.lower()}"
-
 
     # 1. GRAFICO: HEATMAP COMPARATIVA
     plt.figure(figsize=(12, 8))
     sns.heatmap(df_heatmap, annot=True, fmt=".1f", cmap=cmap_to_use, center=0,
-                linewidths=0.5, cbar_kws={'label': 'Bias Gap % (Minority Refusal - Majority Refusal)'})
+                linewidths=0.5, cbar_kws={'label': 'Bias Gap % (Minority Refusal - Majority Refusal)'},
+                annot_kws={"size": 14, "weight": "bold"})
 
-    plt.title(heatmap_title, fontsize=16, pad=15)
-    plt.ylabel("Demographic Axis (Stigma)", fontsize=12)
-    plt.xlabel(x_label, fontsize=12)
-    plt.xticks(rotation=15)
+    plt.title(heatmap_title, fontsize=18, pad=15)
+    plt.ylabel("Demographic Axis (Stigma)", fontsize=14)
+    plt.xlabel(x_label, fontsize=14)
+    plt.xticks(rotation=0, fontsize=13)
+    plt.yticks(fontsize=13)
     plt.tight_layout()
 
     heatmap_path = os.path.join(specific_output_dir, f"heatmap_{file_suffix}.png")
@@ -114,22 +128,23 @@ def generate_comparative_plots(folders, output_dir, compare_type):
     plt.close()
     print(f"Heatmap salvata in: {heatmap_path}")
 
-
     # 2. GRAFICO: AVERAGE BIAS GAP (BAR CHART)
     plt.figure(figsize=(8, 6))
-    avg_gaps = df_heatmap.mean().sort_values(ascending=False)
+
+    avg_gaps = df_heatmap.mean()
 
     sns.barplot(x=avg_gaps.index, y=avg_gaps.values, palette="Reds_r", hue=avg_gaps.index, legend=False)
 
-    plt.title(f"Average Bias Gap\n({heatmap_title.split(chr(10))[1].strip('()')})", fontsize=14, pad=15)
-    plt.ylabel("Average Bias Gap (%)", fontsize=12)
-    plt.xlabel(x_label, fontsize=12)
+    plt.title(barchart_title, fontsize=18, pad=15)  # FONT TITOLO: 18
+    plt.ylabel("Average Bias Gap (%)", fontsize=16)  # FONT ASSE: 16
+    plt.xlabel(x_label, fontsize=16)  # FONT ASSE: 16
+    plt.xticks(fontsize=14)  # FONT TICKS: 14
+    plt.yticks(fontsize=14)  # FONT TICKS: 14
+    plt.ylim(0, 30)
 
-    max_val = max(avg_gaps.values) if len(avg_gaps) > 0 and max(avg_gaps.values) > 0 else 5
-    plt.ylim(0, max_val + 5)
-
+    # FONT INGRANDITO SULLE BARRE (16)
     for i, v in enumerate(avg_gaps.values):
-        plt.text(i, v + 0.5, f"{v:.2f}%", ha='center', fontweight='bold')
+        plt.text(i, v + 0.6, f"{v:.2f}%", ha='center', fontweight='bold', fontsize=16)
 
     plt.tight_layout()
     barchart_path = os.path.join(specific_output_dir, f"average_bar_{file_suffix}.png")
@@ -143,10 +158,8 @@ if __name__ == "__main__":
     parser.add_argument("--folders", nargs='+', required=True,
                         help="Lista delle cartelle (es. results/baseline/gemma results/baseline/mistral)")
     parser.add_argument("--output_dir", type=str, default="results/plots", help="Cartella root di output")
-
-    # NUOVO ARGOMENTO CHIAVE
     parser.add_argument("--compare", type=str, choices=['models', 'techniques'], required=True,
-                        help="Scegli 'models' per confrontare architetture, 'techniques' per confrontare i wrapper su un singolo modello.")
+                        help="Scegli 'models' per confrontare architetture, 'techniques' per confrontare wrapper.")
 
     args = parser.parse_args()
     generate_comparative_plots(args.folders, args.output_dir, args.compare)
